@@ -124,6 +124,13 @@
     <!-- shop -->
     <section id="shop" class="wrap">
       <h2 class="sr-only" data-i18n="shop_t">محصولات</h2>
+
+      <div class="flash-bar cut" id="flashBar">
+        <span class="flash-t" data-i18n="flash_label">پیشنهاد ویژهٔ امروز</span>
+        <div class="flash-timer" id="flashTimer">--:--:--</div>
+        <span class="flash-until" data-i18n="flash_until">تا پایان روز</span>
+      </div>
+      <div class="deal" id="deal" hidden></div>
       <div class="toolbar">
         <input id="search" class="search" type="search"
                placeholder="جستجوی محصول…" data-i18n-ph="search_ph"
@@ -133,6 +140,16 @@
           <option value="asc">ارزان‌ترین</option>
           <option value="desc">گران‌ترین</option>
         </select>
+        <div class="price-filter" id="priceFilter">
+          <span class="pf-label" data-i18n="price_filter">محدودهٔ قیمت</span>
+          <div class="pf-rails">
+            <input type="range" id="priceLo" min="0" max="100" value="0" step="1"
+                   data-i18n-aria="pf_lo" aria-label="حداقل قیمت" />
+            <input type="range" id="priceHi" min="0" max="100" value="100" step="1"
+                   data-i18n-aria="pf_hi" aria-label="حداکثر قیمت" />
+          </div>
+          <output id="priceOut" class="pf-out"></output>
+        </div>
         <span id="rcount" class="result-count" aria-live="polite"></span>
       </div>
       <div id="chips" class="chips"></div>
@@ -245,6 +262,12 @@
         <ul>
           <li><button id="lnkContact" data-i18n="lnk_contact">تماس با ما</button></li>
         </ul>
+      </div>
+      <div class="credits">
+        <details>
+          <summary data-i18n="credits_t">منابع تصاویر</summary>
+          <ul id="creditsList"></ul>
+        </details>
       </div>
       <div class="copy-row">
         <span data-i18n="foot_rights">تمامی حقوق محفوظ است. © 2026</span>

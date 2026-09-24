@@ -14,6 +14,10 @@ const I18N = {
     statN1: "۱۸", statN2: "۷",
     mq1: "ارسال سریع به سراسر ایران", mq2: "گارانتی اصالت کالا", mq3: "پرداخت در محل", mq4: "پشتیبانی آنلاین",
     shop_t: "محصولات",
+    flash_label: "پیشنهاد ویژهٔ امروز", flash_until: "تا پایان روز",
+    deal_badge: "کالای ویژهٔ امروز", price_filter: "محدودهٔ قیمت",
+    pf_lo: "حداقل قیمت", pf_hi: "حداکثر قیمت", credits_t: "منابع تصاویر",
+    rate_label: "امتیاز شما", rated_ok: "امتیازت ثبت شد ✓",
     search_ph: "جستجوی محصول…", search_label: "جستجوی محصول", sort_label: "مرتب‌سازی",
     sort_new: "جدیدترین", sort_asc: "ارزان‌ترین", sort_desc: "گران‌ترین",
     count_unit: "محصول",
@@ -66,6 +70,10 @@ const I18N = {
     statN1: "18", statN2: "7",
     mq1: "Fast shipping across Iran", mq2: "Authenticity warranty", mq3: "Cash on delivery", mq4: "Online support",
     shop_t: "Products",
+    flash_label: "Today's special offer", flash_until: "Until midnight",
+    deal_badge: "Deal of the Day", price_filter: "Price range",
+    pf_lo: "Minimum price", pf_hi: "Maximum price", credits_t: "Image credits",
+    rate_label: "Your rating", rated_ok: "Rating saved ✓",
     search_ph: "Search products…", search_label: "Search products", sort_label: "Sort",
     sort_new: "Newest", sort_asc: "Price: low", sort_desc: "Price: high",
     count_unit: "products",
@@ -187,6 +195,10 @@ function filtered() {
   if (sortMode === "asc") list = [...list].sort((a, b) => a.price - b.price);
   if (sortMode === "desc") list = [...list].sort((a, b) => b.price - a.price);
   if (hotOnly) list = list.filter((p) => p.hot);
+  if (priceLo > 0 || priceHi < 100) {
+    const [pa, pb] = priceBounds();
+    list = list.filter((p) => p.price >= pa && p.price <= pb);
+  }
   return list;
 }
 
@@ -208,6 +220,10 @@ function renderGrid() {
     </div>`;
     document.getElementById("clearFilters").onclick = () => {
       query = ""; activeCat = "all"; hotOnly = false;
+      priceLo = 0; priceHi = 100;
+      const pl = document.getElementById("priceLo"), ph = document.getElementById("priceHi");
+      if (pl) pl.value = 0; if (ph) ph.value = 100;
+      updatePFOut();
       document.getElementById("search").value = "";
       setNavActive("navAll");
       renderChips(); renderGrid();
@@ -224,8 +240,9 @@ function renderGrid() {
       ${off ? `<span class="off">−${fmtPrice(off)}%</span>` : ""}
       <button class="wish${wished ? " on" : ""}" data-act="wish"
         aria-pressed="${wished}" aria-label="${t("wish_add")}" title="${t("wish_add")}">${wished ? "♥" : "♡"}</button>
-      <div class="thumb">${svgIco(iconOf(p.cat))}</div>
+      <div class="thumb">${svgIco(iconOf(p.cat))}${p.img ? `<img src="${p.img}" alt="" width="800" height="600" loading="lazy" onerror="this.remove()">` : ""}</div>
       <h3>${p.name[lang]}</h3>
+      <div class="stars-row">${starsHTML(p)}</div>
       <p class="desc">${p.desc[lang]}</p>
       ${stockLine(p)}
       <div class="price-row">
@@ -326,9 +343,10 @@ function openModal(id, fromHash) {
     : fmtPrice(p.stock) + " " + t("count_unit");
   m.innerHTML = `
     <button class="close" aria-label="${t("close")}">✕</button>
-    <div class="glyph" aria-hidden="true">${svgIco(iconOf(p.cat))}</div>
+    <div class="glyph" aria-hidden="true">${svgIco(iconOf(p.cat))}${p.img ? `<img src="${p.img}" alt="" width="800" height="600" onerror="this.remove()">` : ""}</div>
     <span class="cat-label">${catName}</span>
     <h2 id="modalTitle">${p.name[lang]}</h2>
+    ${rateRowHTML(p)}
     <span class="stock-badge ${stockCls}">${stockTxt}</span>
     <p class="desc">${p.desc[lang]}</p>
     <h4 style="margin-bottom:8px;color:var(--magenta)">${t("specs")}</h4>
@@ -403,9 +421,9 @@ function saveCart() {
 }
 function addToCart(id, n = 1, btn) {
   const p = PRODUCTS.find((x) => x.id === id);
-  if (!p || p.stock <= 0) return;
+  if (!p || p.stock <= 0) return false;
   const have = cart[id] || 0;
-  if (have + n > p.stock) { toast(t("max_stock").replace("{n}", fmtPrice(p.stock))); return; }
+  if (have + n > p.stock) { toast(t("max_stock").replace("{n}", fmtPrice(p.stock))); return false; }
   cart[id] = have + n;
   saveCart();
   popBadge();
@@ -416,6 +434,7 @@ function addToCart(id, n = 1, btn) {
     setTimeout(() => { btn.textContent = old; btn.classList.remove("done"); }, 1200);
   }
   toast(t("added"), { label: t("undo"), fn: () => { changeQty(id, -n); } });
+  return true;
 }
 function changeQty(id, delta) {
   const p = PRODUCTS.find((x) => x.id === id);
@@ -753,6 +772,177 @@ document.getElementById("lnkContact").onclick = () => {
     encodeURIComponent("https://abwlfdlddrwyshyangylys-stack.github.io/RIFTGEAR/"),
     "_blank", "noopener"); } catch {}
 };
+
+
+/* ================= widgets v2.1: ratings, flash, deal, price filter, credits, confetti ================= */
+const rgRatings = (() => {
+  try { const v = JSON.parse(localStorage.getItem("rg_ratings") || "{}"); return v && typeof v === "object" ? v : {}; }
+  catch { return {}; }
+})();
+function seedHash(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0; return h; }
+function seedRating(p) { const h = seedHash(p.id); return { avg: 3.6 + (h % 14) / 10, n: 3 + (h % 28) }; }
+function round1(x) { return Math.round(x * 10) / 10; }
+function starsHTML(p) {
+  const s = seedRating(p);
+  const full = Math.round(s.avg);
+  let stars = "";
+  for (let i = 1; i <= 5; i++) stars += i <= full ? "★" : "☆";
+  const lbl = fmtPrice(round1(s.avg)) + " / 5";
+  return `<span class="stars" role="img" aria-label="${lbl}">${stars}</span><small class="rate-n">(${fmtPrice(s.n)})</small>`;
+}
+function rateRowHTML(p) {
+  const s = seedRating(p);
+  const mine = rgRatings[p.id] || 0;
+  let btns = "";
+  for (let i = 1; i <= 5; i++)
+    btns += `<button class="rate-btn${mine >= i ? " on" : ""}" data-rate="${i}" aria-pressed="${mine === i}" aria-label="${i}">★</button>`;
+  return `<div class="rate-row">
+      <span class="stars big" role="img" aria-label="${fmtPrice(round1(s.avg))} / 5">${[1,2,3,4,5].map(i => i <= Math.round(s.avg) ? "★" : "☆").join("")}</span>
+      <b class="rate-avg">${fmtPrice(round1(s.avg))}</b>
+      <small class="rate-n">(${fmtPrice(s.n)})</small>
+      <span class="rate-spacer"></span>
+      <span class="rate-label">${t("rate_label")}:</span>
+      <span class="rate-btns" role="group" aria-label="${t("rate_label")}">${btns}</span>
+    </div>`;
+}
+document.getElementById("modal").addEventListener("click", (e) => {
+  const b = e.target.closest(".rate-btn");
+  if (!b || !currentId) return;
+  rgRatings[currentId] = +b.dataset.rate;
+  try { localStorage.setItem("rg_ratings", JSON.stringify(rgRatings)); } catch {}
+  toast(t("rated_ok"));
+  openModal(currentId, true);
+});
+
+/* ---- price range state ---- */
+const P_MIN = Math.min(...PRODUCTS.map((p) => p.price));
+const P_MAX = Math.max(...PRODUCTS.map((p) => p.price));
+let priceLo = 0, priceHi = 100;
+function priceBounds() {
+  const span = P_MAX - P_MIN || 1;
+  return [Math.round(P_MIN + (span * priceLo) / 100), Math.round(P_MIN + (span * priceHi) / 100)];
+}
+function updatePFOut() {
+  const out = document.getElementById("priceOut");
+  if (!out) return;
+  const [a, b] = priceBounds();
+  out.textContent = fmtPrice(a) + " – " + fmtPrice(b) + " " + cur();
+}
+(function bindPF() {
+  const lo = document.getElementById("priceLo"), hi = document.getElementById("priceHi");
+  if (!lo || !hi) return;
+  function sync(src) {
+    let a = +lo.value, b = +hi.value;
+    if (a > b) { if (src === "lo") { b = a; hi.value = b; } else { a = b; lo.value = a; } }
+    priceLo = a; priceHi = b;
+    updatePFOut(); renderGrid();
+  }
+  lo.addEventListener("input", () => sync("lo"));
+  hi.addEventListener("input", () => sync("hi"));
+})();
+
+/* ---- flash sale countdown to local midnight ---- */
+function toFaDigits(str) { return str.replace(/[0-9]/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[+d]); }
+function tickFlash() {
+  const el = document.getElementById("flashTimer");
+  if (!el) return;
+  const now = new Date();
+  const mid = new Date(now); mid.setHours(24, 0, 0, 0);
+  const s = Math.max(0, Math.floor((mid - now) / 1000));
+  const hh = String(Math.floor(s / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  const txt = `${hh}:${mm}:${ss}`;
+  el.textContent = lang === "fa" ? toFaDigits(txt) : txt;
+}
+tickFlash();
+setInterval(tickFlash, 1000);
+
+/* ---- deal of the day ---- */
+function renderDeal() {
+  const el = document.getElementById("deal");
+  if (!el) return;
+  let best = null, bestOff = 0;
+  PRODUCTS.forEach((p) => {
+    if (p.oldPrice) {
+      const o = Math.round((1 - p.price / p.oldPrice) * 100);
+      if (o > bestOff) { bestOff = o; best = p; }
+    }
+  });
+  if (!best) best = PRODUCTS.find((p) => p.hot) || PRODUCTS[0];
+  const off = bestOff;
+  el.innerHTML = `
+    <div class="deal-media">${svgIco(iconOf(best.cat))}${best.img ? `<img src="${best.img}" alt="" width="800" height="600" onerror="this.remove()">` : ""}</div>
+    <div class="deal-body">
+      <span class="deal-badge">${t("deal_badge")}</span>
+      <h3>${best.name[lang]}</h3>
+      <p class="desc">${best.desc[lang]}</p>
+      <div class="price-row">
+        <span class="price big">${fmtPrice(best.price)} <small>${cur()}</small></span>
+        ${best.oldPrice ? `<span class="old-price">${fmtPrice(best.oldPrice)}</span>` : ""}
+        ${off ? `<span class="off">−${fmtPrice(off)}%</span>` : ""}
+        ${lang === "en" ? `<span class="usd-hint">≈ ${usdHint(best.price)}</span>` : ""}
+      </div>
+      <div class="deal-cta">
+        <button class="btn btn-primary" id="dealAdd">${best.stock <= 0 ? t("oos_btn") : t("add")}</button>
+        <button class="btn btn-ghost" id="dealMore">${t("detail")}</button>
+      </div>
+      <p class="deal-timer">${t("flash_until")} — <b id="dealTimer">${document.getElementById("flashTimer").textContent}</b></p>
+    </div>`;
+  el.hidden = false;
+  const add = document.getElementById("dealAdd");
+  const more = document.getElementById("dealMore");
+  if (add) add.disabled = best.stock <= 0;
+  if (add) add.onclick = () => addToCart(best.id, 1, add);
+  if (more) more.onclick = () => openModal(best.id);
+}
+
+/* ---- image credits ---- */
+function renderCredits() {
+  const ul = document.getElementById("creditsList");
+  if (!ul || typeof CREDITS === "undefined") return;
+  ul.innerHTML = CREDITS.map((c) =>
+    `<li>${c.title} — ${c.license}${c.src ? ` — <a href="${c.src}" target="_blank" rel="noopener">Wikimedia Commons</a>` : ""}</li>`
+  ).join("");
+}
+
+/* ---- confetti burst on add ---- */
+function burst(x, y) {
+  if (RM.matches) return;
+  const colors = ["#2de2ff", "#ff2e9a", "#8b5cf6", "#ffe45e"];
+  for (let i = 0; i < 14; i++) {
+    const sp = document.createElement("span");
+    sp.className = "conf";
+    sp.style.left = x + "px";
+    sp.style.top = y + "px";
+    sp.style.background = colors[i % colors.length];
+    const ang = Math.random() * Math.PI * 2, dist = 40 + Math.random() * 70;
+    sp.style.setProperty("--dx", Math.round(Math.cos(ang) * dist) + "px");
+    sp.style.setProperty("--dy", Math.round(Math.sin(ang) * dist - 30) + "px");
+    document.body.appendChild(sp);
+    sp.addEventListener("animationend", () => sp.remove());
+    setTimeout(() => sp.remove(), 1600);
+  }
+}
+const _addToCart = addToCart;
+addToCart = function (id, n, btn) {
+  const ok = _addToCart(id, n, btn);
+  if (ok) {
+    const b = document.getElementById("cartBadge");
+    if (b) { const r = b.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2); }
+  }
+  return ok;
+};
+
+/* ---- applyLang wrap so widgets re-render on language switch ---- */
+const _applyLang = applyLang;
+applyLang = function () {
+  _applyLang();
+  renderDeal(); updatePFOut(); renderCredits(); tickFlash();
+};
+
+/* widget init (boot will run applyLang once more) */
+renderDeal(); updatePFOut(); renderCredits();
 
 /* ---------------- boot ---------------- */
 applyLang();
