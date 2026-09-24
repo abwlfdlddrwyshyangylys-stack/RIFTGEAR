@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIFTGEAR — فروشگاه تجهیزات گیمینگ</title>
+  <meta name="description" content="فروشگاه تجهیزات گیمینگ: ماوس، کیبورد، هدست، صندلی، کنسول و بازی — RiftGear gaming gear store." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+</head>
+<body dir="rtl">
+
+  <!-- header -->
+  <header>
+    <div class="wrap hbar">
+      <a class="logo" href="#">RIFT<b>GEAR</b></a>
+      <nav class="main">
+        <button id="navAll" class="active" data-i18n="nav_all">فروشگاه</button>
+        <button id="navHot" data-i18n="nav_hot">پرفروش</button>
+        <button id="navAbout" data-i18n="nav_about">درباره ما</button>
+      </nav>
+      <span class="hspacer"></span>
+      <button class="icon-btn" id="langBtn" data-i18n="lang_btn">EN</button>
+      <button class="icon-btn cart-btn" id="cartBtn" aria-label="cart">
+        🛒 <span class="badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- hero -->
+  <section class="hero wrap">
+    <h1>
+      <span data-i18n="hero_t1">گییر خودت رو از</span>
+      <span class="neon-c" data-i18n="hero_neon1">ریفت</span>
+      <span data-i18n="hero_t2">بیار بیرون</span>
+    </h1>
+    <p class="sub" data-i18n="hero_sub"></p>
+    <div class="cta-row">
+      <button class="btn btn-primary" id="ctaCatalog" data-i18n="cta_catalog">مشاهدهٔ محصولات</button>
+      <button class="btn btn-ghost" id="ctaHot" data-i18n="cta_hot">پرفروش‌ها</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b data-i18n="statN1">۱۷</b><span data-i18n="stat1">محصول گیمینگ</span></div>
+      <div class="stat"><b data-i18n="statN2">۷</b><span data-i18n="stat2">دسته‌بندی</span></div>
+      <div class="stat"><b data-i18n="stat3">ارسال به سراسر ایران</b></div>
+      <div class="stat"><b data-i18n="stat4">گارانتی اصالت</b></div>
+    </div>
+  </section>
+
+  <!-- shop -->
+  <section id="shop" class="wrap">
+    <div class="toolbar">
+      <input id="search" class="search" type="search" placeholder="جستجوی محصول…" />
+      <select id="sort" class="sort">
+        <option value="new">جدیدترین</option>
+        <option value="asc">ارزان‌ترین</option>
+        <option value="desc">گران‌ترین</option>
+      </select>
+    </div>
+    <div id="chips" class="chips"></div>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <!-- about -->
+  <section id="about" class="wrap" style="margin-top:70px">
+    <div class="card cut" style="padding:30px">
+      <h2 style="color:var(--cyan)" data-i18n="about_t">دربارهٔ ریفت‌گیر</h2>
+      <p class="desc" style="min-height:0" data-i18n="about_d"></p>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer>
+    <div class="wrap fgrid">
+      <div>
+        <div class="logo">RIFT<b>GEAR</b></div>
+        <p style="margin-top:6px" data-i18n="foot_note">نمایشگاه نمونه — پرداخت فعال نیست.</p>
+      </div>
+      <p data-i18n="foot_rights">تمامی حقوق محفوظ است. © 2026</p>
+    </div>
+  </footer>
+
+  <!-- product modal -->
+  <div class="overlay" id="ovModal"><div class="modal cut" id="modal"></div></div>
+
+  <!-- cart drawer -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer">
+    <header>
+      <h2 data-i18n="cart">سبد خرید</h2>
+      <button class="icon-btn" id="drawerClose">✕</button>
+    </header>
+    <div class="items" id="cartItems"></div>
+    <div class="foot">
+      <div class="total-row">
+        <span data-i18n="total">جمع کل</span>
+        <b id="cartTotal">0</b>
+      </div>
+      <button class="btn btn-primary" id="checkoutBtn" style="justify-content:center" data-i18n="checkout">ثبت سفارش</button>
+    </div>
+  </aside>
+
+  <!-- toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
