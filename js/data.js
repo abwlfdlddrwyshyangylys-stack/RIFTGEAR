@@ -140,112 +140,22 @@ const PRODUCTS = [
 
 /* image credits (Wikimedia Commons) */
 const CREDITS = [
- {
-  "id": "m1",
-  "title": "G502 Hero.jpg",
-  "license": "CC0",
-  "src": "https://commons.wikimedia.org/wiki/File:G502_Hero.jpg"
- },
- {
-  "id": "m2",
-  "title": "Razer Naga 2014 MMO Gaming Mouse (14714867599).jpg",
-  "license": "CC BY 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Razer_Naga_2014_MMO_Gaming_Mouse_(14714867599).jpg"
- },
- {
-  "id": "m3",
-  "title": "Sega-Dreamcast-Mouse-BR.jpg",
-  "license": "Public domain",
-  "src": "https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Mouse-BR.jpg"
- },
- {
-  "id": "k1",
-  "title": "Logitech-g910 (16475940137).jpg",
-  "license": "CC BY 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Logitech-g910_(16475940137).jpg"
- },
- {
-  "id": "k2",
-  "title": "Razer BlackWidow Ultimate 2014 Elite Mechanical Gaming Keyboard.jpg",
-  "license": "CC BY 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Razer_BlackWidow_Ultimate_2014_Elite_Mechanical_Gaming_Keyboard.jpg"
- },
- {
-  "id": "k3",
-  "title": "2018 Bay Area Mechanical Keyboard Meetup (31008002537).jpg",
-  "license": "CC BY 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:2018_Bay_Area_Mechanical_Keyboard_Meetup_(31008002537).jpg"
- },
- {
-  "id": "h1",
-  "title": "Xbox One Chat Headset.jpg",
-  "license": "CC0",
-  "src": "https://commons.wikimedia.org/wiki/File:Xbox_One_Chat_Headset.jpg"
- },
- {
-  "id": "h2",
-  "title": "Xbox-360-Headset-Mk2-Black.jpg",
-  "license": "Public domain",
-  "src": "https://commons.wikimedia.org/wiki/File:Xbox-360-Headset-Mk2-Black.jpg"
- },
- {
-  "id": "h3",
-  "title": "AirPods (cropped).jpg",
-  "license": "CC BY 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:AirPods_(cropped).jpg"
- },
- {
-  "id": "p1",
-  "title": "Playstation DualSense Controller.png",
-  "license": "CC BY-SA 4.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Playstation_DualSense_Controller.png"
- },
- {
-  "id": "p2",
-  "title": "Xbox One Controller.jpg",
-  "license": "CC BY-SA 3.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Xbox_One_Controller.jpg"
- },
- {
-  "id": "c1",
-  "title": "PlayStation 5 and DualSense.jpg",
-  "license": "CC BY-SA 4.0",
-  "src": "https://commons.wikimedia.org/wiki/File:PlayStation_5_and_DualSense.jpg"
- },
- {
-  "id": "c2",
-  "title": "Xbox Series S with controller.jpg",
-  "license": "CC BY-SA 4.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Xbox_Series_S_with_controller.jpg"
- },
- {
-  "id": "cs1",
-  "title": "PS5DigitalEdition.png",
-  "license": "CC BY-SA 4.0",
-  "src": "https://commons.wikimedia.org/wiki/File:PS5DigitalEdition.png"
- },
- {
-  "id": "cs2",
-  "title": "Nintendo-Switch-Console-Docked-wJoyConRB.jpg",
-  "license": "Public domain",
-  "src": "https://commons.wikimedia.org/wiki/File:Nintendo-Switch-Console-Docked-wJoyConRB.jpg"
- },
- {
-  "id": "g1",
-  "title": "N64-Game-Cartridge.jpg",
-  "license": "Public domain",
-  "src": "https://commons.wikimedia.org/wiki/File:N64-Game-Cartridge.jpg"
- },
- {
-  "id": "g2",
-  "title": "Retro Game display case.jpg",
-  "license": "CC BY-SA 4.0",
-  "src": "https://commons.wikimedia.org/wiki/File:Retro_Game_display_case.jpg"
- },
- {
-  "id": "g3",
-  "title": "PS4 and Wii U collection.jpg",
-  "license": "CC BY-SA 2.0",
-  "src": "https://commons.wikimedia.org/wiki/File:PS4_and_Wii_U_collection.jpg"
- }
+  { t: "G502 Hero.jpg", l: "CC0", s: "https://commons.wikimedia.org/wiki/File:G502_Hero.jpg" },
+  { t: "Razer Naga 2014 MMO Gaming Mouse (14714867599).jpg", l: "CC BY 2.0", s: "https://commons.wikimedia.org/wiki/File:Razer_Naga_2014_MMO_Gaming_Mouse_(14714867599).jpg" },
+  { t: "Sega-Dreamcast-Mouse-BR.jpg", l: "Public domain", s: "https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Mouse-BR.jpg" },
+  { t: "Logitech-g910 (16475940137).jpg", l: "CC BY 2.0", s: "https://commons.wikimedia.org/wiki/File:Logitech-g910_(16475940137).jpg" },
+  { t: "Razer BlackWidow Ultimate 2014 Elite Mechanical Gaming Keyboard.jpg", l: "CC BY 2.0", s: "https://commons.wikimedia.org/wiki/File:Razer_BlackWidow_Ultimate_2014_Elite_Mechanical_Gaming_Keyboard.jpg" },
+  { t: "2018 Bay Area Mechanical Keyboard Meetup (31008002537).jpg", l: "CC BY 2.0", s: "https://commons.wikimedia.org/wiki/File:2018_Bay_Area_Mechanical_Keyboard_Meetup_(31008002537).jpg" },
+  { t: "Xbox One Chat Headset.jpg", l: "CC0", s: "https://commons.wikimedia.org/wiki/File:Xbox_One_Chat_Headset.jpg" },
+  { t: "Xbox-360-Headset-Mk2-Black.jpg", l: "Public domain", s: "https://commons.wikimedia.org/wiki/File:Xbox-360-Headset-Mk2-Black.jpg" },
+  { t: "AirPods (cropped).jpg", l: "CC BY 2.0", s: "https://commons.wikimedia.org/wiki/File:AirPods_(cropped).jpg" },
+  { t: "Playstation DualSense Controller.png", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File:Playstation_DualSense_Controller.png" },
+  { t: "Xbox One Controller.jpg", l: "CC BY-SA 3.0", s: "https://commons.wikimedia.org/wiki/File:Xbox_One_Controller.jpg" },
+  { t: "Gamescom 2009 - Fujitsu (5154).jpg", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File%3AGamescom_2009_-_Fujitsu_%285154%29.jpg" },
+  { t: "Sihoo M57 mesh office chair 03.jpg", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File%3ASihoo_M57_mesh_office_chair_03.jpg" },
+  { t: "PS5DigitalEdition.png", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File:PS5DigitalEdition.png" },
+  { t: "Xbox Series X 2.jpg", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File%3AXbox_Series_X_2.jpg" },
+  { t: "N64-Game-Cartridge.jpg", l: "Public domain", s: "https://commons.wikimedia.org/wiki/File:N64-Game-Cartridge.jpg" },
+  { t: "Retro Game display case.jpg", l: "CC BY-SA 4.0", s: "https://commons.wikimedia.org/wiki/File:Retro_Game_display_case.jpg" },
+  { t: "PS4 and Wii U collection.jpg", l: "CC BY-SA 2.0", s: "https://commons.wikimedia.org/wiki/File:PS4_and_Wii_U_collection.jpg" },
 ];
