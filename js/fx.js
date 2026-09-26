@@ -13,8 +13,9 @@
     let W = 0, H = 0, dpr = 1, raf = 0, t = 0;
     const COL = ["#2de2ff", "#8b5cf6", "#ff2e9a", "#6fe9c3"];
     const GLYPHS = "アイウエオカキクケコ0123456789ABCDEFXYZ<>/#$%&{}[]";
-    const N_BUB = innerWidth < 720 ? 22 : 40;
-    const N_RAIN = innerWidth < 720 ? 6 : 12;
+    const MOB = innerWidth < 720;
+    const N_BUB = MOB ? 10 : 26;
+    const N_RAIN = MOB ? 0 : 8;
     const bubbles = [], rains = [];
     let mx = -999, my = -999;
 
@@ -40,7 +41,7 @@
       return {
         x: Math.random() * W, y: Math.random() * -H,
         sp: .7 + Math.random() * 1.6, cols,
-        cells: Array.from({ length: 26 }, () => GLYPHS[(Math.random() * GLYPHS.length) | 0]),
+        cells: Array.from({ length: 16 }, () => GLYPHS[(Math.random() * GLYPHS.length) | 0]),
         c: Math.random() < .75 ? "#2de2ff" : "#ff2e9a",
         seed: Math.random() * 999
       };
@@ -57,7 +58,7 @@
       const hz = H * .74, off = (t * .35) % 40;
       ctx.save();
       ctx.strokeStyle = "rgba(45,226,255,.10)"; ctx.lineWidth = 1;
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 7; i++) {
         const p = (i * 40 + off) / 360;            // 0..1 toward horizon
         const y = hz + p * p * (H - hz);
         ctx.globalAlpha = .25 + p * .75;
@@ -65,7 +66,7 @@
       }
       ctx.globalAlpha = .5;
       const cx = W / 2;
-      for (let i = -14; i <= 14; i++) {
+      for (let i = -11; i <= 11; i++) {
         ctx.beginPath();
         ctx.moveTo(cx + i * 26, H);
         ctx.lineTo(cx + i * 3.2, hz);
@@ -74,8 +75,11 @@
       ctx.restore();
     }
 
-    function frame() {
-      t++;
+    let last = 0;
+    function frame(ts) {
+      raf = requestAnimationFrame(frame);
+      if (ts - last < 33) return;          // cap at ~30fps — half the GPU/CPU cost
+      last = ts; t++;
       ctx.clearRect(0, 0, W, H);
       horizon();
 
@@ -124,7 +128,6 @@
         }
       }
       ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
     }
     function staticFrame() { t = 1; ctx.clearRect(0, 0, W, H); horizon(); }
 
