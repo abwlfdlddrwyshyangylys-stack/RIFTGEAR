@@ -24,6 +24,28 @@
 </head>
 <body dir="rtl">
 
+  <!-- ==== 2049 FX layers ==== -->
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="fx-scan" aria-hidden="true"></div>
+  <div class="fx-noise" aria-hidden="true"></div>
+  <div class="fx-spot" id="fxSpot" aria-hidden="true"></div>
+  <div class="sys-hud" id="sysHud" aria-hidden="true">
+    <span class="hud-dot"></span>
+    <span id="hudClock">00:00:00</span>
+    <span class="hud-sep">//</span>
+    <span class="hud-sys">SYS.RIFT v20.49</span>
+    <span class="hud-sep">//</span>
+    <span class="hud-net" id="hudNet">NET: OK</span>
+  </div>
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot-core">
+      <div class="boot-logo">RIFT<b>GEAR</b></div>
+      <div class="boot-lines" id="bootLines"></div>
+      <div class="boot-bar"><i id="bootBar"></i></div>
+    </div>
+  </div>
+  <!-- ==== /2049 FX layers ==== -->
+
   <a class="skip" href="#main">پرش به محتوا / Skip to content</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
@@ -67,6 +89,7 @@
 
     <!-- hero -->
     <section class="hero wrap">
+      <div class="orbit" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
       <div class="rift" id="rift" aria-hidden="true">
         <svg viewBox="0 0 400 520" style="pointer-events:auto">
           <defs>
@@ -88,11 +111,12 @@
         </svg>
       </div>
       <div class="hero-inner">
-        <h1>
+        <h1 class="g-title">
           <span data-i18n="hero_t1">گییر خودت رو از</span>
           <span class="neon-c" data-i18n="hero_neon1">ریفت</span>
           <span data-i18n="hero_t2">بیار بیرون</span>
         </h1>
+        <div class="hero-holo" aria-hidden="true"><span id="holoStream">&gt; SYS.BOOT 2049 // LINK STABLE // RIFT.CORE ONLINE //</span></div>
         <p class="sub" data-i18n="hero_sub">فروشگاه تجهیزات گیمینگ — ماوس، کیبورد، هدست، صندلی، کنسول و بازی. همهٔ کالاها با گارانتی اصالت و ارسال سریع به سراسر ایران.</p>
         <div class="cta-row">
           <button class="btn btn-primary" id="ctaCatalog" data-i18n="cta_catalog">مشاهدهٔ محصولات</button>
@@ -309,5 +333,6 @@
 
   <script defer src="js/data.js"></script>
   <script defer src="js/app.js"></script>
+  <script defer src="js/fx.js"></script>
 </body>
 </html>
